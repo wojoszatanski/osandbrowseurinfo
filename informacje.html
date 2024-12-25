@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS and Browser Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .back-btn:hover {
+            transition: 0.3s;
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OS and Browser Information</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Operating System</td>
+                    <td id="os-info"></td>
+                </tr>
+                <tr>
+                    <td>Agent String</td>
+                    <td id="agent-string"></td>
+                </tr>
+                <tr>
+                    <td>Browser</td>
+                    <td id="browser-info"></td>
+                </tr>
+                <tr>
+                    <td>Browser Version</td>
+                    <td id="browser-version"></td>
+                </tr>
+                <tr>
+                    <td>OS Language</td>
+                    <td id="language-info"></td>
+                </tr>
+                <tr>
+                    <td>Platform</td>
+                    <td id="platform-info"></td>
+                </tr>
+                <tr>
+                    <td>Screen Resolution</td>
+                    <td id="screen-info"></td>
+                </tr>
+                <tr>
+                    <td>Browser Resolution</td>
+                    <td id="browser-resolution"></td>
+                </tr>
+                <tr>
+                    <td>Cookies</td>
+                    <td id="cookies-info"></td>
+                </tr>
+                <tr>
+                    <td>JavaScript Support</td>
+                    <td id="js-status"></td>
+                </tr>
+                <tr>
+                    <td>OpenGL Support</td>
+                    <td id="opengl-status"></td>
+                </tr>
+                <tr>
+                    <td>WebSockets Support</td>
+                    <td id="websockets-status"></td>
+                </tr>
+                <tr>
+                    <td>IP Address</td>
+                    <td id="ip-info"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <center><button class="back-btn" onclick="window.location.href='index.html'">Back to Home Page</button></center>
+    </div>
+
+    <script>
+        function getSystemInfo() {
+            const userAgent = navigator.userAgent;
+            let os = 'Unknown operating system';
+            let osVersion = '';
+            if (userAgent.includes('iPad') && userAgent.includes('OS')) {
+                os = 'iPadOS';
+                osVersion = userAgent.match(/OS (\d+[_\.\d]*)/) ? userAgent.match(/OS (\d+[_\.\d]*)/)[1].replace(/_/g, '.') : '';
+            } 
+            else if (userAgent.includes('iPhone') || userAgent.includes('iPod')) {
+                os = 'iOS';
+                osVersion = userAgent.match(/OS (\d+[_\.\d]*)/) ? userAgent.match(/OS (\d+[_\.\d]*)/)[1].replace(/_/g, '.') : '';
+            } 
+            else if (userAgent.includes('Windows NT 10.0')) {
+                os = 'Windows 10';
+            } else if (userAgent.includes('Windows NT 6.3')) {
+                os = 'Windows 8.1';
+            } else if (userAgent.includes('Windows NT 6.2')) {
+                os = 'Windows 8';
+            } else if (userAgent.includes('Windows NT 6.1')) {
+                os = 'Windows 7';
+            } else if (userAgent.includes('Mac OS X')) {
+                os = 'macOS';
+                osVersion = userAgent.match(/Mac OS X (\d+[_\.\d]*)/) ? userAgent.match(/Mac OS X (\d+[_\.\d]*)/)[1].replace(/_/g, '.') : '';
+            } else if (userAgent.includes('Android')) {
+                os = 'Android';
+                osVersion = userAgent.match(/Android (\d+[\.\d+]*)/) ? userAgent.match(/Android (\d+[\.\d+]*)/)[1] : '';
+            } else if (userAgent.includes('Linux')) {
+                os = 'Linux';
+            }
+            document.getElementById('os-info').textContent = os + (osVersion ? ' ' + osVersion : '');
+            document.getElementById('agent-string').textContent = userAgent;
+            let browser = 'Unknown browser';
+            let browserVersion = '';
+            if (userAgent.includes('Firefox')) {
+                browser = 'Mozilla Firefox';
+                const firefoxMatch = userAgent.match(/Firefox\/(\d+\.\d+)/);
+                browserVersion = firefoxMatch ? firefoxMatch[1] : '';
+            } else if (userAgent.includes('Chrome') && !userAgent.includes('Edg') && !userAgent.includes('OPR')) {
+                browser = 'Google Chrome';
+                const chromeMatch = userAgent.match(/Chrome\/(\d+\.\d+\.\d+\.\d+)/);
+                browserVersion = chromeMatch ? chromeMatch[1] : '';
+            } else if (userAgent.includes('Edg')) {
+                browser = 'Microsoft Edge';
+                const edgeMatch = userAgent.match(/Edg\/(\d+\.\d+)/);
+                browserVersion = edgeMatch ? edgeMatch[1] : '';
+            } else if (userAgent.includes('OPR')) {
+                browser = 'Opera';
+                const operaMatch = userAgent.match(/OPR\/(\d+\.\d+)/);
+                browserVersion = operaMatch ? operaMatch[1] : '';
+            } else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+                browser = 'Safari';
+                const safariMatch = userAgent.match(/Version\/(\d+\.\d+)/);
+                browserVersion = safariMatch ? safariMatch[1] : '';
+            }
+            document.getElementById('browser-info').textContent = browser;
+            document.getElementById('browser-version').textContent = browserVersion;
+            document.getElementById('language-info').textContent = navigator.language || navigator.userLanguage;
+            document.getElementById('platform-info').textContent = navigator.platform;
+            document.getElementById('screen-info').textContent = `${window.screen.width} x ${window.screen.height}`;
+            document.getElementById('browser-resolution').textContent = `${window.innerWidth} x ${window.innerHeight}`;
+            document.getElementById('cookies-info').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
+            document.getElementById('js-status').textContent = 'Yes';
+            document.getElementById('opengl-status').textContent = typeof WebGLRenderingContext !== 'undefined' ? 'Yes' : 'No';
+            document.getElementById('websockets-status').textContent = 'WebSocket' in window ? 'Yes' : 'No';
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip-info').textContent = data.ip;
+                })
+                .catch(() => {
+                    document.getElementById('ip-info').textContent = 'Failed to retrieve IP address';
+                });
+        }
+        document.addEventListener('DOMContentLoaded', getSystemInfo);
+    </script>
+</body>
+</html>

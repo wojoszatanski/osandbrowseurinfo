@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OS and Browser Information</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .container {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .left {
+            background-color: #d9f9d6;
+        }
+        .right {
+            background-color: #f3d6d9;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-top: 10px;
+        }
+        p {
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            transition: 0.3s;
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-container">
+        <div class="container left">
+            <h1>Operating System</h1>
+            <img id="system-img" src="" alt="Operating System">
+            <p id="system"></p>
+        </div>
+        <div class="container right">
+            <h1>Browser</h1>
+            <img id="przegladarka-img" src="" alt="Browser">
+            <p id="przegladarka"></p>
+        </div>
+    </div>
+
+    <button class="btn" onclick="window.location.href='informacje.html'">See more information about the system and browser</button>
+
+    <script>
+        function getOS() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const osImg = document.getElementById('system-img');
+            let osName = 'Unknown operating system';
+            if (userAgent.includes('ipad') && userAgent.includes('os')) {
+                osName = 'iPadOS';
+                osImg.src = 'ikony/systemy/ipados.svg';
+            }
+            else if (userAgent.includes('iphone') || userAgent.includes('ipod')) {
+                osName = 'iOS';
+                osImg.src = 'ikony/systemy/ios.svg';
+            }
+            else if (userAgent.includes('windows nt 10.0')) {
+                osName = 'Windows 10';
+                osImg.src = 'ikony/systemy/windows10.svg';
+            } else if (userAgent.includes('windows nt 6.3')) {
+                osName = 'Windows 8.1';
+                osImg.src = 'ikony/systemy/windows8.svg';
+            } else if (userAgent.includes('windows nt 6.2')) {
+                osName = 'Windows 8';
+                osImg.src = 'ikony/systemy/windows8.svg';
+            } else if (userAgent.includes('windows nt 6.1')) {
+                osName = 'Windows 7';
+                osImg.src = 'ikony/systemy/windows7.svg';
+            }
+            else if (userAgent.includes('mac os x')) {
+                osName = 'macOS';
+                osImg.src = 'ikony/systemy/macos.svg';
+            }
+            else if (userAgent.includes('linux') && !userAgent.includes('android')) {
+                osName = 'Linux';
+                osImg.src = 'ikony/systemy/linux.svg';
+            }
+            else if (userAgent.includes('android')) {
+                osName = 'Android';
+                osImg.src = 'ikony/systemy/android.svg';
+            } else {
+                osImg.src = 'ikony/na.svg';
+            }
+            return osName;
+        }
+        function getBrowser() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const browserImg = document.getElementById('przegladarka-img');
+            if (userAgent.includes('chrome') && !userAgent.includes('edg') && !userAgent.includes('opr')) {
+                browserImg.src = 'ikony/przegladarki/chrome.svg';
+                return 'Google Chrome';
+            }
+            if (userAgent.includes('firefox')) {
+                browserImg.src = 'ikony/przegladarki/firefox.svg';
+                return 'Mozilla Firefox';
+            }
+            if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+                browserImg.src = 'ikony/przegladarki/safari.svg';
+                return 'Safari';
+            }
+            if (userAgent.includes('edg')) {
+                browserImg.src = 'ikony/przegladarki/edge.svg';
+                return 'Microsoft Edge';
+            }
+            if (userAgent.includes('opr') || userAgent.includes('opera')) {
+                browserImg.src = 'ikony/przegladarki/opera.svg';
+                return 'Opera';
+            }
+            if (userAgent.includes('trident') || userAgent.includes('msie')) {
+                browserImg.src = 'ikony/przegladarki/explorer.svg';
+                return 'Internet Explorer';
+            }
+            browserImg.src = 'ikony/na.svg';
+            return 'Unknown browser';
+        }
+        document.getElementById('system').textContent = getOS();
+        document.getElementById('przegladarka').textContent = getBrowser();
+    </script>
+</body>
+</html>
