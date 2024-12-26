@@ -131,7 +131,6 @@
                 </tr>
             </tbody>
         </table>
-
         <center><button class="back-btn" onclick="window.location.href='index.html'">Back to Home Page</button></center>
     </div>
     <script>
@@ -206,20 +205,28 @@
             const doNotTrack = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
             document.getElementById('do-not-track-status').textContent =
                 doNotTrack === "1" ? "Enabled" : "Disabled";
-            fetch('https://ipinfo.io/json?token=807d8989d25ff3')
+            fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('ip-info').textContent = data.ip;
-                    document.getElementById('location-info').textContent = `${data.city}, ${data.region}, ${data.country}`;
-                    document.getElementById('network-provider').textContent = data.org || 'Unknown';
+                    fetch(`https://ipapi.co/${data.ip}/json/`)
+                        .then(response => response.json())
+                        .then(locationData => {
+                            document.getElementById('location-info').textContent = 
+                                `${locationData.city || 'Unknown City'}, ${locationData.region || 'Unknown Region'}, ${locationData.country_name || 'Unknown Country'}`;
+                            document.getElementById('network-provider').textContent = 
+                                locationData.org || 'Unknown Provider';
+                        })
+                        .catch(() => {
+                            document.getElementById('location-info').textContent = 'Unable to fetch location';
+                            document.getElementById('network-provider').textContent = 'Unable to fetch provider';
+                        });
                 })
                 .catch(() => {
-                    document.getElementById('ip-info').textContent = 'Failed to retrieve IP address';
-                    document.getElementById('location-info').textContent = 'Failed to retrieve location';
-                    document.getElementById('network-provider').textContent = 'Failed to retrieve network provider';
+                    document.getElementById('ip-info').textContent = 'Unable to fetch IP';
                 });
         }
-        document.addEventListener('DOMContentLoaded', getSystemInfo);
+        window.onload = getSystemInfo;
     </script>
 </body>
 </html>
