@@ -74,23 +74,22 @@
             <p id="przegladarka"></p>
         </div>
     </div>
-
     <button class="btn" onclick="window.location.href='informacje.html'">See more information about the system and browser</button>
-
     <script>
         function getOS() {
             const userAgent = navigator.userAgent.toLowerCase();
             const osImg = document.getElementById('system-img');
             let osName = 'Unknown operating system';
+            let osVersion = '';
             if (userAgent.includes('ipad') && userAgent.includes('os')) {
                 osName = 'iPadOS';
+                osVersion = userAgent.match(/os (\d+[_\.\d]*)/i) ? userAgent.match(/os (\d+[_\.\d]*)/i)[1].replace(/_/g, '.') : '';
                 osImg.src = 'ikony/systemy/ipados.svg';
-            }
-            else if (userAgent.includes('iphone') || userAgent.includes('ipod')) {
+            } else if ((userAgent.includes('iphone') || userAgent.includes('ipod')) && userAgent.includes('os')) {
                 osName = 'iOS';
+                osVersion = userAgent.match(/os (\d+[_\.\d]*)/i) ? userAgent.match(/os (\d+[_\.\d]*)/i)[1].replace(/_/g, '.') : '';
                 osImg.src = 'ikony/systemy/ios.svg';
-            }
-            else if (userAgent.includes('windows nt 10.0')) {
+            } else if (userAgent.includes('windows nt 10.0')) {
                 osName = 'Windows 10';
                 osImg.src = 'ikony/systemy/windows10.svg';
             } else if (userAgent.includes('windows nt 6.3')) {
@@ -102,22 +101,20 @@
             } else if (userAgent.includes('windows nt 6.1')) {
                 osName = 'Windows 7';
                 osImg.src = 'ikony/systemy/windows7.svg';
-            }
-            else if (userAgent.includes('mac os x')) {
+            } else if (userAgent.includes('mac os x')) {
                 osName = 'macOS';
                 osImg.src = 'ikony/systemy/macos.svg';
-            }
-            else if (userAgent.includes('linux') && !userAgent.includes('android')) {
+            } else if (userAgent.includes('linux') && !userAgent.includes('android')) {
                 osName = 'Linux';
                 osImg.src = 'ikony/systemy/linux.svg';
-            }
-            else if (userAgent.includes('android')) {
+            } else if (userAgent.includes('android')) {
                 osName = 'Android';
+                osVersion = userAgent.match(/android (\d+[\.\d]*)/i) ? userAgent.match(/android (\d+[\.\d]*)/i)[1] : '';
                 osImg.src = 'ikony/systemy/android.svg';
             } else {
                 osImg.src = 'ikony/na.svg';
             }
-            return osName;
+            return osName + (osVersion ? ` ${osVersion}` : '');
         }
         function getBrowser() {
             const userAgent = navigator.userAgent.toLowerCase();
