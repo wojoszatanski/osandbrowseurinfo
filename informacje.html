@@ -98,6 +98,10 @@
                     <td id="cookies-info"></td>
                 </tr>
                 <tr>
+                    <td>Third-Party Cookies</td>
+                    <td id="third-party-cookies-info"></td>
+                </tr>
+                <tr>
                     <td>JavaScript Support</td>
                     <td id="js-status"></td>
                 </tr>
@@ -110,15 +114,26 @@
                     <td id="websockets-status"></td>
                 </tr>
                 <tr>
+                    <td>Do Not Track</td>
+                    <td id="do-not-track-status"></td>
+                </tr>
+                <tr>
                     <td>IP Address</td>
                     <td id="ip-info"></td>
+                </tr>
+                <tr>
+                    <td>Location</td>
+                    <td id="location-info"></td>
+                </tr>
+                <tr>
+                    <td>Network Provider</td>
+                    <td id="network-provider"></td>
                 </tr>
             </tbody>
         </table>
 
         <center><button class="back-btn" onclick="window.location.href='index.html'">Back to Home Page</button></center>
     </div>
-
     <script>
         function getSystemInfo() {
             const userAgent = navigator.userAgent;
@@ -127,12 +142,10 @@
             if (userAgent.includes('iPad') && userAgent.includes('OS')) {
                 os = 'iPadOS';
                 osVersion = userAgent.match(/OS (\d+[_\.\d]*)/) ? userAgent.match(/OS (\d+[_\.\d]*)/)[1].replace(/_/g, '.') : '';
-            } 
-            else if (userAgent.includes('iPhone') || userAgent.includes('iPod')) {
+            } else if (userAgent.includes('iPhone') || userAgent.includes('iPod')) {
                 os = 'iOS';
                 osVersion = userAgent.match(/OS (\d+[_\.\d]*)/) ? userAgent.match(/OS (\d+[_\.\d]*)/)[1].replace(/_/g, '.') : '';
-            } 
-            else if (userAgent.includes('Windows NT 10.0')) {
+            } else if (userAgent.includes('Windows NT 10.0')) {
                 os = 'Windows 10';
             } else if (userAgent.includes('Windows NT 6.3')) {
                 os = 'Windows 8.1';
@@ -142,7 +155,6 @@
                 os = 'Windows 7';
             } else if (userAgent.includes('Mac OS X')) {
                 os = 'macOS';
-                osVersion = userAgent.match(/Mac OS X (\d+[_\.\d]*)/) ? userAgent.match(/Mac OS X (\d+[_\.\d]*)/)[1].replace(/_/g, '.') : '';
             } else if (userAgent.includes('Android')) {
                 os = 'Android';
                 osVersion = userAgent.match(/Android (\d+[\.\d+]*)/) ? userAgent.match(/Android (\d+[\.\d+]*)/)[1] : '';
@@ -184,13 +196,27 @@
             document.getElementById('js-status').textContent = 'Yes';
             document.getElementById('opengl-status').textContent = typeof WebGLRenderingContext !== 'undefined' ? 'Yes' : 'No';
             document.getElementById('websockets-status').textContent = 'WebSocket' in window ? 'Yes' : 'No';
-            fetch('https://api.ipify.org?format=json')
+            try {
+                document.cookie = "testcookie=1; SameSite=None; Secure";
+                const cookiesEnabled = document.cookie.indexOf("testcookie") !== -1;
+                document.getElementById('third-party-cookies-info').textContent = cookiesEnabled ? 'Enabled' : 'Disabled';
+            } catch {
+                document.getElementById('third-party-cookies-info').textContent = 'Blocked';
+            }
+            const doNotTrack = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+            document.getElementById('do-not-track-status').textContent =
+                doNotTrack === "1" ? "Enabled" : "Disabled";
+            fetch('https://ipinfo.io/json?token=807d8989d25ff3')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('ip-info').textContent = data.ip;
+                    document.getElementById('location-info').textContent = `${data.city}, ${data.region}, ${data.country}`;
+                    document.getElementById('network-provider').textContent = data.org || 'Unknown';
                 })
                 .catch(() => {
                     document.getElementById('ip-info').textContent = 'Failed to retrieve IP address';
+                    document.getElementById('location-info').textContent = 'Failed to retrieve location';
+                    document.getElementById('network-provider').textContent = 'Failed to retrieve network provider';
                 });
         }
         document.addEventListener('DOMContentLoaded', getSystemInfo);
